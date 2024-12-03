@@ -1,61 +1,60 @@
 import java.util.Scanner;
 
 public class Payroll {
-    private String employeeName;
-    private int idNumber;
-    private double hourlyPayRate;
-    private double hoursWorked;
+    private int[] employeeId = {5658845, 4520125, 7895122, 8777541, 8451277, 1302850, 7580489};
+    private int[] hours = new int[7];
+    private double[] payRate = new double[7];
+    private double[] wages = new double[7];
 
-    // Constructor
-    public Payroll(String employeeName, int idNumber) {
-        this.employeeName = employeeName;
-        this.idNumber = idNumber;
-    }
-
-    // Accessors
-    public String getEmployeeName() { return employeeName; }
-    public int getIdNumber() { return idNumber; }
-    public double getHourlyPayRate() { return hourlyPayRate; }
-    public double getHoursWorked() { return hoursWorked; }
-
-    // Mutators
-    public void setHourlyPayRate(double hourlyPayRate) {
-        if (hourlyPayRate < 0) throw new IllegalArgumentException("Pay rate cannot be negative.");
-        this.hourlyPayRate = hourlyPayRate;
-    }
-
-    public void setHoursWorked(double hoursWorked) {
-        if (hoursWorked < 0 || hoursWorked > 168) // 168 hours = 24 hours * 7 days
-            throw new IllegalArgumentException("Hours worked must be between 0 and 168.");
-        this.hoursWorked = hoursWorked;
-    }
-
-    // Calculate gross pay
-    public double calculateGrossPay() {
-        return hourlyPayRate * hoursWorked;
-    }
-
-    // Main program to test
-    public static void main(String[] args) {
+    // Method to input hours worked and pay rate for each employee
+    public void inputEmployeeData() {
         Scanner scanner = new Scanner(System.in);
+        for (int i = 0; i < 7; i++) {
+            System.out.println("\nEmployee ID: " + employeeId[i]);
+            // Get valid hours
+            while (true) {
+                System.out.print("Enter hours worked: ");
+                int h = scanner.nextInt();
+                if (h >= 0) {
+                    hours[i] = h;
+                    break;
+                } else {
+                    System.out.println("Hours cannot be negative.");
+                }
+            }
+            // Get valid pay rate
+            while (true) {
+                System.out.print("Enter pay rate (min 6.00): ");
+                double rate = scanner.nextDouble();
+                if (rate >= 6.00) {
+                    payRate[i] = rate;
+                    break;
+                } else {
+                    System.out.println("Pay rate must be at least 6.00.");
+                }
+            }
+        }
+    }
 
-        // Get employee details
-        System.out.print("Enter employee's name: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter employee's ID number: ");
-        int id = scanner.nextInt();
+    // Method to calculate wages for each employee
+    public void calculateWages() {
+        for (int i = 0; i < 7; i++) {
+            wages[i] = hours[i] * payRate[i];
+        }
+    }
 
-        // Create Payroll object
-        Payroll payroll = new Payroll(name, id);
+    // Method to display employee information and wages
+    public void displayEmployeeWages() {
+        System.out.println("\nEmployee ID | Gross Wages");
+        for (int i = 0; i < 7; i++) {
+            System.out.println(employeeId[i] + " | $" + wages[i]);
+        }
+    }
 
-        // Set pay rate and hours worked
-        System.out.print("Enter hourly pay rate: ");
-        payroll.setHourlyPayRate(scanner.nextDouble());
-        System.out.print("Enter hours worked: ");
-        payroll.setHoursWorked(scanner.nextDouble());
-
-        // Display gross pay
-        System.out.println("Gross pay for " + payroll.getEmployeeName() + ": $" + payroll.calculateGrossPay());
-        scanner.close();
+    public static void main(String[] args) {
+        Payroll payroll = new Payroll();
+        payroll.inputEmployeeData();
+        payroll.calculateWages();
+        payroll.displayEmployeeWages();
     }
 }
